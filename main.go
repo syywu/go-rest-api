@@ -39,6 +39,6 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Get("/", homeHandler)
 	r.Get("/users", usersHandler)
-	log.Fatal(http.ListenAndServe(":8080", r))
 	fmt.Print("listening on port 8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
