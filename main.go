@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -15,7 +14,6 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World!"))
 	})
-	fmt.Print("listening on 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-
+	fmt.Print("listening on port 8080")
+	http.ListenAndServe(":8080", r)
 }
