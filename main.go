@@ -29,7 +29,7 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 
 // post
 func postHandler(w http.ResponseWriter, r *http.Request) {
-
+	w.Write([]byte("Users displayed here"))
 }
 
 // delete
