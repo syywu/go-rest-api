@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -14,6 +15,7 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World!"))
 	})
+	fmt.Print("listening on 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
