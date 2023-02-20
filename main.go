@@ -31,7 +31,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func usersHandler(w http.ResponseWriter, r *http.Request) {
-
+	w.Write([]byte("Users displayed here"))
 }
 
 func main() {
