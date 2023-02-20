@@ -10,3 +10,7 @@ type Users struct {
 type Getter interface {
 	GetAll() []Users
 }
+
+type Adder interface {
+	Add(user Users)
+}
