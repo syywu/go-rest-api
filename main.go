@@ -27,10 +27,16 @@ type Users struct {
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello World!"))
 }
+
+func usersHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", homeHandler)
+	r.Get("/users", usersHandler)
 	fmt.Print("listening on port 8080")
 	http.ListenAndServe(":8080", r)
 }
