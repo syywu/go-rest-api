@@ -18,3 +18,9 @@ type Adder interface {
 type List struct {
 	Users []User
 }
+
+func New() *List {
+	return &List{
+		Users: []User{},
+	}
+}
