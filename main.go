@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -9,13 +10,14 @@ import (
 )
 
 // posts
-/*
-{
-    "userId": 1,
-    "id": 1,
-    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-  },*/
+
+// var obj =
+// {
+//     "userId": 1,
+//     "id": 1,
+//     "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+//     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+//   },
 
 type Users struct {
 	userId int    `json:"userid"`
@@ -37,6 +39,6 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Get("/", homeHandler)
 	r.Get("/users", usersHandler)
+	log.Fatal(http.ListenAndServe(":8080", r))
 	fmt.Print("listening on port 8080")
-	http.ListenAndServe(":8080", r)
 }
