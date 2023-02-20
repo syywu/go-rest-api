@@ -6,3 +6,7 @@ type Users struct {
 	title  string `json:"title"`
 	body   string `json:"body"`
 }
+
+type Getter interface {
+	GetAll() []Users
+}
