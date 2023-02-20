@@ -18,10 +18,10 @@ import (
   },*/
 
 type Users struct {
-	userId int
-	id     int
-	title  string
-	body   string
+	userId int    `json:"userid"`
+	id     int    `json:"id"`
+	title  string `json:"title"`
+	body   string `json:"body"`
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
