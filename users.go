@@ -1,6 +1,6 @@
 package main
 
-type Users struct {
+type User struct {
 	userId int    `json:"userid"`
 	id     int    `json:"id"`
 	title  string `json:"title"`
@@ -8,9 +8,13 @@ type Users struct {
 }
 
 type Getter interface {
-	GetAll() []Users
+	GetAll() []User
 }
 
 type Adder interface {
-	Add(user Users)
+	Add(user User)
+}
+
+type List struct {
+	Users []User
 }
