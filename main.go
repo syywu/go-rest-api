@@ -30,15 +30,28 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello World!"))
 }
 
+// get
 func usersHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Users displayed here"))
 }
+
+// post
+func postHandler(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// delete
+
+// patch
+
+// put
 
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", homeHandler)
 	r.Get("/users", usersHandler)
+	r.Post("/users", postHandler)
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
