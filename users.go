@@ -1,3 +1,5 @@
+package main
+
 type Users struct {
 	userId int    `json:"userid"`
 	id     int    `json:"id"`
