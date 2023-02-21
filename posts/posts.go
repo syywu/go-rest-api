@@ -1,8 +1,8 @@
 package posts
 
 type Post struct {
-	userId int    `json:"userid"`
-	id     int    `json:"id"`
+	userId string `json:"userid"`
+	id     string `json:"id"`
 	title  string `json:"title"`
 	body   string `json:"body"`
 }
