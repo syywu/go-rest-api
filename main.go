@@ -51,6 +51,16 @@ func main() {
 
 	// post
 	r.Post("/posts", func(w http.ResponseWriter, r *http.Request) {
+		req := map[string]string{}
+		json.NewDecoder(r.Body).Decode(&req)
+
+		new.Add(posts.Post{
+			UserId: req["userid"],
+			Id:     req["id"],
+			Title:  req["title"],
+			Body:   req["body"],
+		})
+
 		w.Write([]byte("posted"))
 	})
 	fmt.Print("listening on port 8080")
