@@ -28,6 +28,12 @@ import (
 
 func main() {
 	new := posts.New()
+	new.Add(posts.Post{
+		UserId: "100",
+		Id:     "1",
+		Title:  "hello",
+		Body:   "hello world",
+	})
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

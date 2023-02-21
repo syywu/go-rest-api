@@ -1,10 +1,10 @@
 package posts
 
 type Post struct {
-	userId string `json:"userid"`
-	id     string `json:"id"`
-	title  string `json:"title"`
-	body   string `json:"body"`
+	UserId string `json:"userid"`
+	Id     string `json:"id"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
 }
 
 type Getter interface {
