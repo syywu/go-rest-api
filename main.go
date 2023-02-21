@@ -1,6 +1,7 @@
 package main
 
 import (
+	"/Users/samantha/projects/go-rest-api/posts/posts.go"
 	"fmt"
 	"log"
 	"net/http"
@@ -22,11 +23,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello World!"))
 }
 
-// get
-func usersHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Users displayed here"))
-}
-
 // post
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("posted"))
@@ -39,10 +35,18 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 // put
 
 func main() {
+	new := posts.New()
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+
+	// get
 	r.Get("/", homeHandler)
-	r.Get("/users", usersHandler)
+	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
+		p := new.GetAll()
+
+	})
+
 	r.Post("/users", postHandler)
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))

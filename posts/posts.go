@@ -1,6 +1,6 @@
-package main
+package posts
 
-type User struct {
+type Post struct {
 	userId int    `json:"userid"`
 	id     int    `json:"id"`
 	title  string `json:"title"`
@@ -8,27 +8,27 @@ type User struct {
 }
 
 type Getter interface {
-	GetAll() []User
+	GetAll() []Post
 }
 
 type Adder interface {
-	Add(user User)
+	Add(post Post)
 }
 
 type List struct {
-	Users []User
+	Users []Post
 }
 
 func New() *List {
 	return &List{
-		Users: []User{},
+		Posts: []Post{},
 	}
 }
 
-func (l *List) GetUsers() []User {
-	return l.Users
+func (l *List) GetUsers() []Post {
+	return l.Posts
 }
 
-func (l *List) Add(user User) {
-	l.Users = append(l.Users, user)
+func (l *List) Add(post Post) {
+	l.Posts = append(l.Posts, post)
 }
