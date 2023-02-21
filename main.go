@@ -20,15 +20,6 @@ import (
 //     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
 //   },
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Home Route"))
-}
-
-// post
-func postHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("posted"))
-}
-
 // delete
 
 // patch
@@ -42,7 +33,9 @@ func main() {
 	r.Use(middleware.Logger)
 
 	// get
-	r.Get("/", homeHandler)
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Home Route"))
+	})
 
 	r.Get("/posts", func(w http.ResponseWriter, r *http.Request) {
 		p := new.GetPosts()
@@ -50,7 +43,10 @@ func main() {
 
 	})
 
-	r.Post("/posts", postHandler)
+	// post
+	r.Post("/posts", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("posted"))
+	})
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
