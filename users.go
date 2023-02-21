@@ -24,3 +24,7 @@ func New() *List {
 		Users: []User{},
 	}
 }
+
+func (l List) GetUsers() []User {
+	return l.Users
+}
