@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"myapi/posts"
+	"myapi/models"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -27,8 +27,8 @@ import (
 // put
 
 func main() {
-	new := posts.New()
-	new.Add(posts.Post{
+	allPosts := []posts.Post{}
+	allPosts = append(allPosts, models.Post{
 		UserId: "100",
 		Id:     "1",
 		Title:  "hello",
@@ -44,24 +44,16 @@ func main() {
 	})
 
 	r.Get("/posts", func(w http.ResponseWriter, r *http.Request) {
-		p := new.GetPosts()
-		json.NewEncoder(w).Encode(p)
+		json.NewEncoder(w).Encode(allPosts)
 
 	})
 
 	// post
 	r.Post("/posts", func(w http.ResponseWriter, r *http.Request) {
-		req := map[string]string{}
+		req := posts.Post{}
 		json.NewDecoder(r.Body).Decode(&req)
-
-		new.Add(posts.Post{
-			UserId: req["userid"],
-			Id:     req["id"],
-			Title:  req["title"],
-			Body:   req["body"],
-		})
-
-		w.Write([]byte("posted"))
+		allPosts = append(allPosts, req)
+		w.Write([]byte(req.Id))
 	})
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))

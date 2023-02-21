@@ -1,18 +1,10 @@
-package posts
+package models
 
 type Post struct {
 	UserId string `json:"userid"`
 	Id     string `json:"id"`
 	Title  string `json:"title"`
 	Body   string `json:"body"`
-}
-
-type Getter interface {
-	GetAll() []Post
-}
-
-type Adder interface {
-	Add(post Post)
 }
 
 type List struct {
