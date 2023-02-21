@@ -27,7 +27,7 @@ import (
 // put
 
 func main() {
-	allPosts := []posts.Post{}
+	allPosts := []models.Post{}
 	allPosts = append(allPosts, models.Post{
 		UserId: "100",
 		Id:     "1",
@@ -50,7 +50,7 @@ func main() {
 
 	// post
 	r.Post("/posts", func(w http.ResponseWriter, r *http.Request) {
-		req := posts.Post{}
+		req := models.Post{}
 		json.NewDecoder(r.Body).Decode(&req)
 		allPosts = append(allPosts, req)
 		w.Write([]byte(req.Id))
