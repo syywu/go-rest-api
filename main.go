@@ -1,10 +1,10 @@
 package main
 
 import (
-	"/Users/samantha/projects/go-rest-api/posts/posts.go"
 	"encoding/json"
 	"fmt"
 	"log"
+	"myapi/posts"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -21,7 +21,7 @@ import (
 //   },
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World!"))
+	w.Write([]byte("Home Route"))
 }
 
 // post
@@ -43,13 +43,14 @@ func main() {
 
 	// get
 	r.Get("/", homeHandler)
-	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
-		p := new.GetAll()
+
+	r.Get("/posts", func(w http.ResponseWriter, r *http.Request) {
+		p := new.GetPosts()
 		json.NewEncoder(w).Encode(p)
 
 	})
 
-	r.Post("/users", postHandler)
+	r.Post("/posts", postHandler)
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }

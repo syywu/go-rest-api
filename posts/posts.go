@@ -25,7 +25,7 @@ func New() *List {
 	}
 }
 
-func (l *List) GetUsers() []Post {
+func (l *List) GetPosts() []Post {
 	return l.Posts
 }
 
