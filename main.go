@@ -29,8 +29,8 @@ import (
 func main() {
 	allPosts := []models.Post{}
 	allPosts = append(allPosts, models.Post{
-		UserId: "100",
-		Id:     "1",
+		UserId: 100,
+		Id:     1,
 		Title:  "hello",
 		Body:   "hello world",
 	})
@@ -53,7 +53,7 @@ func main() {
 		req := models.Post{}
 		json.NewDecoder(r.Body).Decode(&req)
 		allPosts = append(allPosts, req)
-		w.Write([]byte(req.Id))
+		w.Write([]byte(string(rune(req.Id))))
 	})
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
