@@ -2,6 +2,7 @@ package main
 
 import (
 	"/Users/samantha/projects/go-rest-api/posts/posts.go"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -44,6 +45,7 @@ func main() {
 	r.Get("/", homeHandler)
 	r.Get("/users", func(w http.ResponseWriter, r *http.Request) {
 		p := new.GetAll()
+		json.NewEncoder(w).Encode(p)
 
 	})
 

@@ -16,7 +16,7 @@ type Adder interface {
 }
 
 type List struct {
-	Users []Post
+	Posts []Post
 }
 
 func New() *List {
