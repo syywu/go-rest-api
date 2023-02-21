@@ -25,6 +25,10 @@ func New() *List {
 	}
 }
 
-func (l List) GetUsers() []User {
+func (l *List) GetUsers() []User {
 	return l.Users
+}
+
+func (l *List) Add(user User) {
+	l.Users = append(l.Users, user)
 }
