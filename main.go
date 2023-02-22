@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"myapi/handlers"
 	"myapi/models"
 	"net/http"
 
@@ -35,10 +36,7 @@ func main() {
 		w.Write([]byte("Home Route"))
 	})
 
-	r.Get("/posts", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(allPosts)
-
-	})
+	r.Get("/posts", handlers.GetPosts(allPosts))
 
 	// post
 	r.Post("/posts", func(w http.ResponseWriter, r *http.Request) {

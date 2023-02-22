@@ -1,7 +1,13 @@
 package handlers
 
-import "net/http"
+import (
+	"encoding/json"
+	"myapi/models"
+	"net/http"
+)
 
-func GetPosts(w http.ResponseWriter, r *http.Request) {
-	w.Write(nil)
+func GetPosts(allPosts []models.Post) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(allPosts)
+	}
 }
