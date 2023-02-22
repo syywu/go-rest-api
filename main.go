@@ -11,20 +11,12 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-// posts
-
 // {
 //     "userId": 1,
 //     "id": 1,
 //     "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
 //     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
 //   },
-
-// delete
-
-// patch
-
-// put
 
 func main() {
 	allPosts := []models.Post{}
@@ -55,6 +47,16 @@ func main() {
 		allPosts = append(allPosts, req)
 		w.Write([]byte(string(rune(req.Id))))
 	})
+
+	// delete
+	r.Delete("/posts", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("deleted"))
+	})
+
+	// patch
+
+	// put
+
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }

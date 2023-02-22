@@ -24,3 +24,5 @@ func (l *List) GetPosts() []Post {
 func (l *List) Add(post Post) {
 	l.Posts = append(l.Posts, post)
 }
+
+func (l *List) Delete(id int)
