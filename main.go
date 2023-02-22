@@ -20,8 +20,15 @@ import (
 //   },
 
 func main() {
-	allPosts := []models.Post{}
-	allPosts = append(allPosts, models.Post{
+	allPosts := models.New()
+	// allPosts = append(allPosts, models.Post{
+	// 	UserId: 100,
+	// 	Id:     1,
+	// 	Title:  "hello",
+	// 	Body:   "hello world",
+	// })
+
+	allPosts.Add(models.Post{
 		UserId: 100,
 		Id:     1,
 		Title:  "hello",
@@ -29,11 +36,14 @@ func main() {
 	})
 
 	r := chi.NewRouter()
+
+	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
 	// get
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Home Route"))
+		w.Write([]byte("Root Route"))
 	})
 
 	r.Get("/posts", handlers.GetPosts(allPosts))
@@ -42,8 +52,15 @@ func main() {
 	r.Post("/posts", func(w http.ResponseWriter, r *http.Request) {
 		req := models.Post{}
 		json.NewDecoder(r.Body).Decode(&req)
-		allPosts = append(allPosts, req)
-		w.Write([]byte(string(rune(req.Id))))
+		// allPosts = append(allPosts, req)
+		// allPosts.Add(models.Post{
+		// 	UserId: req["userid"],
+		// 	Id:     req["id"],
+		// 	Title:  req["title"],
+		// 	Body:   req["body"],
+		// })
+
+		w.Write([]byte("posted"))
 	})
 
 	// delete
