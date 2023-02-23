@@ -23,3 +23,12 @@ func (e *ErrResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	render.Status(r, e.StatusCode)
 	return nil
 }
+
+func ErrorReader(err error) *ErrResponse {
+	return &ErrResponse{
+		Err:        err,
+		StatusCode: 400,
+		StatusText: "Bad request",
+		Message:    err.Error(),
+	}
+}
