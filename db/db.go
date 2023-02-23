@@ -1,6 +1,9 @@
 package db
 
-import "fmt"
+import (
+	"database/sql"
+	"fmt"
+)
 
 const (
 	HOST = "database"
@@ -8,3 +11,7 @@ const (
 )
 
 var ErrNoMatch = fmt.Errorf("no matching record")
+
+type Db struct {
+	Conn *sql.DB
+}
