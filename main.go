@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"myapi/handlers"
 	"myapi/models"
 	"net/http"
 
@@ -44,6 +46,24 @@ func main() {
 	// get
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Root Route"))
+	})
+
+	r.Route("/posts", func(r chi.Router) {
+		r.Get("/", handlers.GetPosts(allPosts))
+		// post
+		r.Post("/", func(w http.ResponseWriter, r *http.Request) {
+			req := models.Post{}
+			json.NewDecoder(r.Body).Decode(&req)
+			// allPosts = append(allPosts, req)
+			// allPosts.Add(models.Post{
+			// 	UserId: req["userid"],
+			// 	Id:     req["id"],
+			// 	Title:  req["title"],
+			// 	Body:   req["body"],
+			// })
+
+			w.Write([]byte("posted"))
+		})
 	})
 
 	// delete
