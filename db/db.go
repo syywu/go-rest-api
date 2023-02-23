@@ -13,12 +13,12 @@ const (
 
 var ErrNoMatch = fmt.Errorf("no matching record")
 
-type Db struct {
+type Database struct {
 	Conn *sql.DB
 }
 
-func Initialise(username, password, database string) (Db, error) {
-	db := Db{}
+func Initialise(username, password, database string) (Database, error) {
+	db := Database{}
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, username, password, database)
 	conn, err := sql.Open("postgres", dsn)
 	if err != nil {

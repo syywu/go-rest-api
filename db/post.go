@@ -4,7 +4,7 @@ import (
 	"myapi/models"
 )
 
-func (db Db) GetAllPosts() (*models.List, error) {
+func (db Database) GetAllPosts() (*models.List, error) {
 	list := &models.List{}
 	rows, err := db.Conn.Query("SELECT * FROM posts")
 	if err != nil {
@@ -21,7 +21,7 @@ func (db Db) GetAllPosts() (*models.List, error) {
 	return list, nil
 }
 
-func (db Db) AddPost(post *models.Post) error {
+func (db Database) AddPost(post *models.Post) error {
 	var id int
 	query := `INSERT INTO posts (userId, title, body) VALUES ($!, $2, $3) RETURNING id`
 	err := db.Conn.QueryRow(query, post.UserId, post.Title, post.Body).Scan(&id)

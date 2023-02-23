@@ -14,10 +14,10 @@ import (
 )
 
 func main() {
-	// allPosts := models.New()
 	var allPosts = []*models.Post{
 		{UserId: 100, Id: 1, Title: "hello", Body: "hello world"},
 	}
+	// allPosts := models.New()
 
 	// allPosts.Add(models.Post{
 	// 	UserId: 100,
@@ -43,25 +43,24 @@ func main() {
 		// post
 		r.Post("/", func(w http.ResponseWriter, r *http.Request) {
 			req := &models.Post{}
-			allPosts = append(allPosts, req)
-			json.NewDecoder(r.Body).Decode(req)
+			// allPosts = append(allPosts, req)
 			// allPosts.Add(models.Post{
 			// 	UserId: req["userid"],
 			// 	Id:     req["id"],
 			// 	Title:  req["title"],
 			// 	Body:   req["body"],
 			// })
-
+			// req.Id = rand.Intn(100) + 10
+			allPosts = append(allPosts, req)
+			json.NewDecoder(r.Body).Decode(req)
 			w.Write([]byte("posted"))
 			render.Status(r, http.StatusCreated)
-
 		})
 	})
+
 	r.Route("/{postID}", func(r chi.Router) {
 		// delete
-		r.Delete("/posts", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("deleted"))
-		})
+		r.Delete("/", handlers.DeletePost())
 
 		// patch
 
@@ -70,4 +69,5 @@ func main() {
 
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
+
 }
