@@ -65,10 +65,11 @@ func main() {
 			w.Write([]byte("posted"))
 		})
 	})
-
-	// delete
-	r.Delete("/posts", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("deleted"))
+	r.Route("/{postID}", func(r chi.Router) {
+		// delete
+		r.Delete("/posts", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("deleted"))
+		})
 	})
 
 	// patch
