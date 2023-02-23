@@ -1,5 +1,10 @@
 package models
 
+import (
+	"fmt"
+	"net/http"
+)
+
 type Post struct {
 	UserId int    `json:"userid"`
 	Id     int    `json:"id"`
@@ -15,6 +20,13 @@ func New() *List {
 	return &List{
 		Posts: []Post{},
 	}
+}
+
+func (p *Post) Bind(r *http.Request) error {
+	if p.Title == "" {
+		return fmt.Errorf("title is required")
+	}
+	return nil
 }
 
 func (l *List) GetPosts() []Post {
