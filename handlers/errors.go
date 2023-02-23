@@ -32,3 +32,12 @@ func ErrorReader(err error) *ErrResponse {
 		Message:    err.Error(),
 	}
 }
+
+func ServerErrorRenderer(err error) *ErrResponse {
+	return &ErrResponse{
+		Err:        err,
+		StatusCode: 500,
+		StatusText: "Internal server error",
+		Message:    err.Error(),
+	}
+}
