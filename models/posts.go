@@ -29,6 +29,10 @@ func (p *Post) Bind(r *http.Request) error {
 	return nil
 }
 
+func (*List) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
+}
+
 func (l *List) GetPosts() []Post {
 	return l.Posts
 }
