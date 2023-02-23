@@ -13,28 +13,18 @@ import (
 	"github.com/go-chi/render"
 )
 
-// {
-//     "userId": 1,
-//     "id": 1,
-//     "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-//     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-//   },
-
 func main() {
-	allPosts := models.New()
-	// allPosts = append(allPosts, models.Post{
+	// allPosts := models.New()
+	var allPosts = []*models.Post{
+		{UserId: 100, Id: 1, Title: "hello", Body: "hello world"},
+	}
+
+	// allPosts.Add(models.Post{
 	// 	UserId: 100,
 	// 	Id:     1,
 	// 	Title:  "hello",
 	// 	Body:   "hello world",
 	// })
-
-	allPosts.Add(models.Post{
-		UserId: 100,
-		Id:     1,
-		Title:  "hello",
-		Body:   "hello world",
-	})
 
 	r := chi.NewRouter()
 
@@ -52,9 +42,9 @@ func main() {
 		r.Get("/", handlers.GetPosts(allPosts))
 		// post
 		r.Post("/", func(w http.ResponseWriter, r *http.Request) {
-			req := models.Post{}
-			json.NewDecoder(r.Body).Decode(&req)
-			// allPosts = append(allPosts, req)
+			req := &models.Post{}
+			allPosts = append(allPosts, req)
+			json.NewDecoder(r.Body).Decode(req)
 			// allPosts.Add(models.Post{
 			// 	UserId: req["userid"],
 			// 	Id:     req["id"],
