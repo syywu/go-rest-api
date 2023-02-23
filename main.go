@@ -63,6 +63,8 @@ func main() {
 			// })
 
 			w.Write([]byte("posted"))
+			render.Status(r, http.StatusCreated)
+
 		})
 	})
 	r.Route("/{postID}", func(r chi.Router) {
@@ -70,11 +72,11 @@ func main() {
 		r.Delete("/posts", func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("deleted"))
 		})
+
+		// patch
+
+		// put
 	})
-
-	// patch
-
-	// put
 
 	fmt.Print("listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
