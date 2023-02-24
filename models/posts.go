@@ -29,7 +29,7 @@ func (p *Post) Bind(r *http.Request) error {
 	return nil
 }
 
-// chi,Renderer- render as JSON onjects to API consumers
+// chi,Renderer- renders as JSON onjects to API consumers
 func (*List) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
