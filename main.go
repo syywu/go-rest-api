@@ -1,20 +1,14 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"myapi/db"
-	"myapi/handlers"
-	"net"
 	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 )
 
@@ -75,11 +69,11 @@ func main() {
 			// put
 		})
 	*/
-	port := ":8080"
-	listener, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("an error has occured: %s", err)
-	}
+	// port := ":8080"
+	// listener, err := net.Listen("tcp", port)
+	// if err != nil {
+	// 	log.Fatalf("an error has occured: %s", err)
+	// }
 
 	dbUser, dbPassword, dbName := os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB")
 
@@ -87,34 +81,49 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot connect to db", err)
 	}
+
+	var createPostTable = `
+	CREATE TABLE IF NOT EXISTS posts(
+	id SERIAL PRIMARY KEY,
+	userId VARCHAR(100) NOT NULL,
+	title TEXT,
+	body TEXT
+	);
+	`
+	_, err = database.Conn.Exec(createPostTable)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// ensures db connection is kept on while application is running
 	defer database.Conn.Close()
 
 	// API server is started on a seperate goroutine
 	// it keeps running until it receives a SIGINT or SIGTERM signal which then calls the Stop func to clean up and shut down server
-	httpHandler := handlers.NewHandler(database)
-	server := &http.Server{
-		Handler: httpHandler,
-	}
-	go func() {
-		server.Serve(listener)
-	}()
-	defer Stop(server)
-	log.Printf("started server on %s", port)
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
-	log.Print(fmt.Sprint(<-ch))
-	log.Println("Stopping API server")
-}
+	// 	httpHandler := handlers.NewHandler(database)
+	// 	server := &http.Server{
+	// 		Handler: httpHandler,
+	// 	}
+	// 	go func() {
+	// 		server.Serve(listener)
+	// 	}()
+	// 	defer Stop(server)
+	// 	log.Printf("started server on %s", port)
+	// 	ch := make(chan os.Signal, 1)
+	// 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
+	// 	log.Print(fmt.Sprint(<-ch))
+	// 	log.Println("Stopping API server")
+	// }
 
-func Stop(server *http.Server) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := server.Shutdown(ctx); err != nil {
-		log.Printf("could not shut down server correctly: %v\n", err)
-		os.Exit(1)
-	}
-}
+	// func Stop(server *http.Server) {
+	// 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	// 	defer cancel()
+	// 	if err := server.Shutdown(ctx); err != nil {
+	// 		log.Printf("could not shut down server correctly: %v\n", err)
+	// 		os.Exit(1)
+	// 	}
+	// }
 
-// fmt.Print("listening on port 8080")
-// log.Fatal(http.ListenAndServe(":8080", r))
+	fmt.Print("listening on port 8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
+}
