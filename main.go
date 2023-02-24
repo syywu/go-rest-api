@@ -73,6 +73,7 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot connect to db", err)
 	}
+	// ensures db connection is kept on while application is running
 	defer database.Conn.Close()
 
 	fmt.Print("listening on port 8080")
