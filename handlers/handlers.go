@@ -8,11 +8,11 @@ import (
 	"github.com/go-chi/render"
 )
 
-var dbInstance db.Database
+var DBInstance db.Database
 
 func NewHandler(db db.Database) http.Handler {
 	r := chi.NewRouter()
-	dbInstance = db
+	DBInstance = db
 	r.MethodNotAllowed(methodNotAllowedHandler)
 	r.NotFound(notFoundHandler)
 	return r
@@ -20,12 +20,10 @@ func NewHandler(db db.Database) http.Handler {
 
 func methodNotAllowedHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
-	w.WriteHeader(405)
 	render.Render(w, r, ErrMethodNotAllowed)
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
-	w.WriteHeader(400)
 	render.Render(w, r, ErrNotFound)
 }

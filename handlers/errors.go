@@ -24,7 +24,7 @@ func (e *ErrResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func ErrorReader(err error) *ErrResponse {
+func ErrorRenderer(err error) *ErrResponse {
 	return &ErrResponse{
 		Err:        err,
 		StatusCode: 400,
