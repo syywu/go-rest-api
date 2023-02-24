@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"myapi/db"
 	"myapi/handlers"
@@ -74,7 +75,7 @@ func main() {
 			// put
 		})
 	*/
-		port := ":8080"
+	port := ":8080"
 	listener, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("an error has occured: %s", err)
@@ -89,7 +90,8 @@ func main() {
 	// ensures db connection is kept on while application is running
 	defer database.Conn.Close()
 
-
+	// API server is started on a seperate goroutine
+	// it keeps running until it receives a SIGINT or SIGTERM signal which then calls the Stop func to clean up and shut down server
 	httpHandler := handlers.NewHandler(database)
 	server := &http.Server{
 		Handler: httpHandler,
@@ -101,22 +103,18 @@ func main() {
 	log.Printf("started server on %s", port)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
-	log.Printf(fmt.Sprint(<-ch))
+	log.Print(fmt.Sprint(<-ch))
 	log.Println("Stopping API server")
-	}
-
-	func Stop(server *http.Server){
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		if err := server.Shutdown(ctx); err != nil{
-			log.Printf("could not shut down server correctly: %v\n", err)
-			os.Exit(1)
-		}
-	}
-
-
-
-	// fmt.Print("listening on port 8080")
-	// log.Fatal(http.ListenAndServe(":8080", r))
-
 }
+
+func Stop(server *http.Server) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("could not shut down server correctly: %v\n", err)
+		os.Exit(1)
+	}
+}
+
+// fmt.Print("listening on port 8080")
+// log.Fatal(http.ListenAndServe(":8080", r))
