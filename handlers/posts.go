@@ -4,7 +4,7 @@ import (
 	"myapi/models"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 )
 
@@ -31,11 +31,11 @@ import (
 // var postIDkey = "postID"
 
 func posts(r chi.Router) {
-	r.Get("/", getAllPosts)
-	r.Post("/", createPost)
+	r.Get("/", GetAllPosts)
+	r.Post("/", CreatePost)
 }
 
-func createPost(w http.ResponseWriter, r *http.Request) {
+func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post := &models.Post{}
 	if err := render.Bind(r, post); err != nil {
 		render.Render(w, r, ErrBadRequest)
@@ -51,7 +51,7 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getAllPosts(w http.ResponseWriter, r *http.Request) {
+func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	posts, err := DBInstance.GetAllPosts()
 	if err != nil {
 		render.Render(w, r, ServerErrorRenderer(err))

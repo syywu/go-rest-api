@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"myapi/db"
+	"myapi/handlers"
+	"net"
 	"net/http"
 	"os"
 
@@ -58,6 +59,8 @@ func main() {
 			})
 		})
 
+
+
 		r.Route("/{postID}", func(r chi.Router) {
 			// delete
 			r.Delete("/", handlers.DeletePost())
@@ -67,6 +70,12 @@ func main() {
 			// put
 		})
 	*/
+
+	listener, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		log.Fatalf("an error has occured: %s", err)
+	}
+
 	dbUser, dbPassword, dbName := os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB")
 
 	database, err := db.Initialise(dbUser, dbPassword, dbName)
@@ -76,7 +85,15 @@ func main() {
 	// ensures db connection is kept on while application is running
 	defer database.Conn.Close()
 
-	fmt.Print("listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	httpHandler := handlers.NewHandler(database)
+	server := &http.Server{
+		Handler: httpHandler,
+	}
+	go func() {
+		server.Serve(listener)
+	}()
+
+	// fmt.Print("listening on port 8080")
+	// log.Fatal(http.ListenAndServe(":8080", r))
 
 }
