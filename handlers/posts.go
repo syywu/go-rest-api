@@ -28,7 +28,7 @@ import (
 // 	}
 // }
 
-var postIDkey = "postID"
+// var postIDkey = "postID"
 
 func posts(r chi.Router) {
 	r.Get("/", getAllPosts)
@@ -47,6 +47,18 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := render.Render(w, r, post); err != nil {
 		render.Render(w, r, ServerErrorRenderer(err))
+		return
+	}
+}
+
+func getAllPosts(w http.ResponseWriter, r *http.Request) {
+	posts, err := DBInstance.GetAllPosts()
+	if err != nil {
+		render.Render(w, r, ServerErrorRenderer(err))
+		return
+	}
+	if err := render.Render(w, r, posts); err != nil {
+		render.Render(w, r, ErrorRenderer(err))
 		return
 	}
 }
