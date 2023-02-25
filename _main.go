@@ -30,11 +30,6 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Use(render.SetContentType(render.ContentTypeJSON))
-
 	// get
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Root Route"))
@@ -86,19 +81,6 @@ func main() {
 	database, err := db.Initialise(dbUser, dbPassword, dbName)
 	if err != nil {
 		log.Fatal("cannot connect to db", err)
-	}
-
-	var createPostTable = `
-	CREATE TABLE IF NOT EXISTS posts(
-	id SERIAL PRIMARY KEY,
-	userId VARCHAR(100) NOT NULL,
-	title TEXT,
-	body TEXT
-	);
-	`
-	_, err = database.Conn.Exec(createPostTable)
-	if err != nil {
-		log.Fatal(err)
 	}
 
 	// ensures db connection is kept on while application is running

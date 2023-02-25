@@ -25,7 +25,21 @@ func main() {
 	var err error
 	db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/data?sslmode=disable")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Cannot connect to db", err)
+	}
+
+	var createPostTable = `
+	CREATE TABLE IF NOT EXISTS posts(
+	id SERIAL PRIMARY KEY,
+	userId VARCHAR(100) NOT NULL,
+	title TEXT,
+	body TEXT
+	);
+	`
+
+	_, err = db.Exec(createPostTable)
+	if err != nil {
+		log.Fatal("cannot create table", err)
 	}
 
 	r := chi.NewRouter()
