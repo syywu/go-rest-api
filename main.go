@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -17,7 +18,15 @@ type Post struct {
 	Body   string `json:"body"`
 }
 
+var db *sql.DB
+
 func main() {
+
+	var err error
+	db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/data?sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	r := chi.NewRouter()
 
