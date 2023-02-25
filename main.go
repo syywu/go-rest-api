@@ -30,6 +30,19 @@ func main() {
 		w.Write([]byte("root route"))
 	})
 
+	r.Route("/posts", func(r chi.Router) {
+		r.Get("/", GetAllPosts)
+		r.Post("/", AddPost)
+	})
+
 	fmt.Print("Listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
+}
+
+func GetAllPosts() {
+
+}
+
+func AddPost() {
+
 }
