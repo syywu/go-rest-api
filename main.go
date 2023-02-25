@@ -62,8 +62,15 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
-func GetAllPosts() {
-
+func GetAllPosts() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		rows, err := db.Query("SELECT * FROM posts")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Fatal(err)
+		}
+		defer rows.Close()
+	}
 }
 
 func AddPost() {
