@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -54,8 +55,8 @@ func main() {
 	})
 
 	r.Route("/posts", func(r chi.Router) {
-		r.Get("/", GetAllPosts)
-		r.Post("/", AddPost)
+		r.Get("/", GetAllPosts())
+		r.Post("/", AddPost())
 	})
 
 	fmt.Print("Listening on port 8080")
@@ -70,9 +71,27 @@ func GetAllPosts() http.HandlerFunc {
 			log.Fatal(err)
 		}
 		defer rows.Close()
+
+		posts := []Post{}
+
+		for rows.Next() {
+			var post Post
+			err := rows.Scan(&post.ID, &post.UserId, &post.Title, &post.Body)
+			if err != nil {
+				log.Println(err)
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			posts = append(posts, post)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		err = json.NewEncoder(w).Encode(posts)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
-func AddPost() {
-
+func AddPost() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {}
 }
