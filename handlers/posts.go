@@ -4,7 +4,6 @@ import (
 	"myapi/models"
 	"net/http"
 
-	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 )
 
@@ -30,10 +29,25 @@ import (
 
 // var postIDkey = "postID"
 
-func posts(r chi.Router) {
-	r.Get("/", GetAllPosts)
-	r.Post("/", CreatePost)
-}
+// func posts(r chi.Router) {
+// 	r.Get("/", GetAllPosts)
+// 	r.Post("/", CreatePost)
+// }
+
+const insertPost = `
+INSERT INTO posts (userId, title, body) 
+VALUES ($1, $2, $3) 
+RETURNING id`
+
+// func CreatePost(w http.ResponseWriter, r *http.Request) {
+// 	var data models.Post
+// 	err := json.NewDecoder(r.Body).Decode(&data)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), http.StatusBadRequest)
+// 		return
+// 	}
+
+// }
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post := &models.Post{}

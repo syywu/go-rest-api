@@ -5,7 +5,7 @@ import (
 )
 
 func (db Database) GetAllPosts() (*models.List, error) {
-	list := &models.List{}
+	list := &models.List{Posts: []models.Post{}}
 	rows, err := db.Conn.Query("SELECT * FROM posts")
 	if err != nil {
 		return list, err

@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"log"
 	"myapi/db"
+	"myapi/handlers"
 	"net/http"
 	"os"
+
+	_ "github.com/lib/pq"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -36,7 +39,10 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Root Route"))
 	})
-
+	r.Route("/posts", func(r chi.Router) {
+		r.Get("/", handlers.GetAllPosts)
+		r.Post("/", handlers.CreatePost)
+	})
 	/*
 		r.Route("/posts", func(r chi.Router) {
 			r.Get("/", handlers.GetPosts(allPosts))

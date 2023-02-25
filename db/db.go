@@ -22,7 +22,7 @@ type Database struct {
 func Initialise(username, password, database string) (Database, error) {
 	db := Database{}
 	// dsn := fmt.Sprintf("host=%v port=%v user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, username, password, database)
-	conn, err := sql.Open("postgres", "postgres://user:password@localhost/data?sslmode=disable")
+	conn, err := sql.Open("postgres", "postgres://user:password@localhost:5432/data?sslmode=disable")
 	if err != nil {
 		return db, err
 	}
