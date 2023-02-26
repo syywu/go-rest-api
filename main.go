@@ -24,11 +24,13 @@ type Post struct {
 var db *sql.DB
 
 func main() {
-
 	var err error
 	db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/data?sslmode=disable")
+	// err = db.Ping()
 	if err != nil {
 		log.Fatal("Cannot connect to db", err)
+	} else {
+		log.Println("Database connection established")
 	}
 
 	var createPostTable = `
@@ -57,7 +59,7 @@ func main() {
 	})
 
 	r.Route("/posts", func(r chi.Router) {
-		r.Get("/", GetAllPosts())
+		r.Get("/", GetAllPosts)
 		r.Post("/", AddPost())
 	})
 
@@ -65,32 +67,30 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
-func GetAllPosts() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		rows, err := db.Query("SELECT * FROM posts")
+func GetAllPosts(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query("SELECT * FROM posts")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	posts := []Post{}
+
+	for rows.Next() {
+		var post Post
+		err := rows.Scan(&post.ID, &post.UserId, &post.Title, &post.Body)
 		if err != nil {
+			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Fatal(err)
+			return
 		}
-		defer rows.Close()
-
-		posts := []Post{}
-
-		for rows.Next() {
-			var post Post
-			err := rows.Scan(&post.ID, &post.UserId, &post.Title, &post.Body)
-			if err != nil {
-				log.Println(err)
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			posts = append(posts, post)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		err = json.NewEncoder(w).Encode(posts)
-		if err != nil {
-			log.Fatal(err)
-		}
+		posts = append(posts, post)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(posts)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
