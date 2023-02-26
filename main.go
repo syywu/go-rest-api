@@ -24,13 +24,17 @@ type Post struct {
 var db *sql.DB
 
 func main() {
-	var err error
-	db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/data?sslmode=disable")
-	// err = db.Ping()
+	db, err := sql.Open("postgres", "postgres://user:password@localhost/data?sslmode=disable")
 	if err != nil {
 		log.Fatal("Cannot connect to db", err)
 	} else {
 		log.Println("Database connection established")
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	var createPostTable = `
@@ -60,7 +64,7 @@ func main() {
 
 	r.Route("/posts", func(r chi.Router) {
 		r.Get("/", GetAllPosts)
-		// r.Post("/", AddPost())
+		r.Post("/", AddPost)
 	})
 
 	fmt.Print("Listening on port 8080")
@@ -70,8 +74,8 @@ func main() {
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	defer rows.Close()
 
@@ -81,8 +85,7 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		var post Post
 		err := rows.Scan(&post.ID, &post.UserId, &post.Title, &post.Body)
 		if err != nil {
-			log.Println(err)
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		posts = append(posts, post)
@@ -94,6 +97,18 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AddPost() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
+func AddPost(w http.ResponseWriter, r *http.Request) {
+	var post Post
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	res, err := db.Exec("INSERT INTO posts (userid, title, body) VALUES ($1, $2, $3) RETURNING id", post.UserId, post.Title, post.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 }
