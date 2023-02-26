@@ -36,7 +36,7 @@ func main() {
 	var createPostTable = `
 	CREATE TABLE IF NOT EXISTS posts(
 	id SERIAL PRIMARY KEY,
-	userId VARCHAR(100) NOT NULL,
+	userId INT NOT NULL,
 	title TEXT,
 	body TEXT
 	);
@@ -60,7 +60,7 @@ func main() {
 
 	r.Route("/posts", func(r chi.Router) {
 		r.Get("/", GetAllPosts)
-		r.Post("/", AddPost())
+		// r.Post("/", AddPost())
 	})
 
 	fmt.Print("Listening on port 8080")
