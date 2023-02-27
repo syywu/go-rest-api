@@ -72,6 +72,7 @@ func main() {
 	r.Post("/posts", AddPost)
 	r.Get("/posts/{id}", GetPostByID)
 	r.Delete("/posts/{id}", DeletePost)
+	r.Put("/posts/{id}", UpdatePost)
 
 	fmt.Print("Listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
@@ -174,4 +175,30 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func UpdatePost(w http.ResponseWriter, r *http.Request) {
+	db := OpenConnection()
+	params := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(params)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var post Post
+	err = json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	row, err := db.Exec(`UPDATE posts SET userID = $1, title = $2, body = $3 WHERE id = $4`, post.UserId, post.Title, post.Body, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	row.RowsAffected()
+	defer db.Close()
+
+	w.WriteHeader(http.StatusCreated)
 }
