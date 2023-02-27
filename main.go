@@ -81,6 +81,7 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	defer db.Close()
 
 	posts := []Post{}
 
@@ -93,11 +94,10 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		}
 		posts = append(posts, post)
 	}
+	defer rows.Close()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(posts)
 
-	defer rows.Close()
-	defer db.Close()
 }
 
 func AddPost(w http.ResponseWriter, r *http.Request) {
@@ -113,6 +113,6 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	w.WriteHeader(http.StatusCreated)
 	defer db.Close()
+	w.WriteHeader(http.StatusCreated)
 }
