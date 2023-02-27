@@ -9,10 +9,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi"
+	// "github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
+	_ "github.com/lib/pq"
 )
-
-// db := db.OpenConnection()
 
 func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	db := db.OpenConnection()
@@ -37,7 +37,6 @@ func GetAllPosts(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(posts)
-
 }
 
 func AddPost(w http.ResponseWriter, r *http.Request) {
