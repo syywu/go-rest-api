@@ -48,7 +48,7 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec("INSERT INTO posts (userid, title, body) VALUES ($1, $2, $3)", post.UserId, post.Title, post.Body)
+	_, err = db.Exec("INSERT INTO posts (userid, title, body) VALUES ($1, $2, $3) RETURNING id", post.UserId, post.Title, post.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
