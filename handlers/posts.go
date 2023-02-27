@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"myapi/db"
 	"myapi/models"
 	"net/http"
@@ -50,7 +48,8 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 
 	_, err = db.Exec("INSERT INTO posts (userid, title, body) VALUES ($1, $2, $3) RETURNING id", post.UserId, post.Title, post.Body)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	defer db.Close()
 	w.WriteHeader(http.StatusCreated)
@@ -59,10 +58,10 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 func GetPostByID(w http.ResponseWriter, r *http.Request) {
 	db := db.OpenConnection()
 	idStr := chi.URLParam(r, "id")
-	fmt.Print(idStr)
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
 	}
 
 	rows, err := db.Query(`SELECT * FROM posts WHERE userid = $1`, id)
@@ -99,11 +98,12 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	params := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(params)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 	row, err := db.Exec(`DELETE FROM posts WHERE id = $1`, id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	row.RowsAffected()
@@ -117,7 +117,8 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	params := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(params)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	var post models.Post
