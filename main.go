@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	_ "github.com/lib/pq"
 
@@ -69,6 +70,7 @@ func main() {
 
 	r.Get("/posts", GetAllPosts)
 	r.Post("/posts", AddPost)
+	r.Get("/posts/{id}", GetPostByID)
 
 	fmt.Print("Listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
@@ -115,4 +117,42 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 	w.WriteHeader(http.StatusCreated)
+}
+
+func GetPostByID(w http.ResponseWriter, r *http.Request) {
+	db := OpenConnection()
+	idStr := chi.URLParam(r, "id")
+	fmt.Print(idStr)
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rows, err := db.Query(`SELECT * FROM posts WHERE userid = $1`, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	defer db.Close()
+
+	posts := []Post{}
+	for rows.Next() {
+		post := Post{}
+		err = rows.Scan(&post.ID, &post.UserId, &post.Title, &post.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		posts = append(posts, post)
+	}
+	defer rows.Close()
+
+	if len(posts) == 0 {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(posts)
 }
