@@ -55,7 +55,7 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func GetPostByID(w http.ResponseWriter, r *http.Request) {
+func GetPostByUserID(w http.ResponseWriter, r *http.Request) {
 	db := db.OpenConnection()
 	idStr := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(idStr)

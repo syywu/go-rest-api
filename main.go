@@ -46,7 +46,7 @@ func main() {
 		r.Post("/", handlers.AddPost)
 
 		r.Route("/{id}", func(r chi.Router) {
-			r.Get("/", handlers.GetPostByID)
+			r.Get("/", handlers.GetPostByUserID)
 			r.Delete("/", handlers.DeletePost)
 			r.Put("/", handlers.UpdatePost)
 		})

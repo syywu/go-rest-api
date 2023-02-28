@@ -14,7 +14,7 @@ See here for some best practise https://pace.dev/blog/2018/05/09/how-I-write-htt
 | Method | Path           | Additional Info | Result                      |
 | ------ | -------------- | --------------- | --------------------------- |
 | GET    | /posts    |                 | all posts                   |
-| GET    | /posts/{id} |                 | get post by a user ID |
+| GET    | /posts/{id} |                 | get post by user ID |
 | POST   | /posts     |  { body }        | create a new post           |
 | PUT    | /posts/{id} |  { body }        | update post by ID           |
 | DELETE | /posts/{id} |                 | delete post by ID           |
